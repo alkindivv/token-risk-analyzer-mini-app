@@ -44,9 +44,14 @@ export default function TokenScanner({ onScan }: { onScan: (result: ScanResult) 
           onChange={(e) => setChainId(e.target.value)}
           className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
         >
-          {Object.entries(CHAINS).map(([id, chain]) => (
+          {/* {Object.entries(CHAINS).map(([id, chain]) => (
             <option key={id} value={id}>
               {chain.icon} {chain.name}
+            </option>
+          ))} */}
+          {Object.entries(CHAINS).map(([id, chain]) => (
+            <option key={id} value={id}>
+              {chain.name}
             </option>
           ))}
         </select>

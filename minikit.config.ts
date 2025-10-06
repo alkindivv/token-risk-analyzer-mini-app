@@ -17,7 +17,7 @@ export const minikitConfig = {
     version: "1",
     name: "Token Risk Analyzer", 
     subtitle: "Security Scanner", 
-    description: "Mini App for analyze token analysis, Detect honeypots, rug pulls, and contract vulnerabilities before buying.",
+    description: "Mini App to analyze token, Detect honeypots, rug pulls, and contract vulnerabilities, whales & smart money flows and etc.",
     screenshotUrls: [`${ROOT_URL}/screenshot-portrait.png`],
     iconUrl: `${ROOT_URL}/blue-icon.png`,
     splashImageUrl: `${ROOT_URL}/blue-hero.png`,

@@ -50,12 +50,12 @@ function VerdictCard({ verdict }: { verdict?: ScanResult['verdict'] }) {
   };
 
   return (
-    <div className={`p-6 rounded-xl border-2 ${colors[verdict.rating]}`}>
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-2xl font-bold">Overall Verdict</h3>
-        <span className="text-3xl font-bold">{verdict.rating}</span>
+    <div className={`p-4 sm:p-6 rounded-xl border-2 ${colors[verdict.rating]}`}>
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0 mb-3">
+        <h3 className="text-lg sm:text-2xl font-bold">Overall Verdict</h3>
+        <span className="text-2xl sm:text-3xl font-bold">{verdict.rating}</span>
       </div>
-      <p className="text-sm mb-2">{verdict.recommendation}</p>
+      <p className="text-xs sm:text-sm mb-2">{verdict.recommendation}</p>
       <div className="text-xs opacity-75">
         Confidence: {verdict.confidence}%
       </div>
@@ -98,7 +98,7 @@ function MarketDataCard({ price, dex }: MarketDataCardProps) {
         <DollarSign className="w-5 h-5" />
         Market Data
       </h3>
-      <div className="grid grid-cols-2 gap-3 text-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
         <div>
           <p className="text-gray-400">Price</p>
           <p className="text-white font-bold">${parseFloat(String(priceUsd)).toFixed(6)}</p>
@@ -152,7 +152,7 @@ function RugPullCard({ rugPull }: RugPullCardProps) {
         <AlertTriangle className="w-5 h-5" />
         Rug Pull Risk: {rugPull.probability}%
       </h3>
-      <p className="text-sm text-gray-300 mb-3">{rugPull.recommendation}</p>
+      <p className="text-xs sm:text-sm text-gray-300 mb-3">{rugPull.recommendation}</p>
       {rugPull.indicators.length > 0 && (
         <div className="space-y-1">
           <p className="text-xs text-gray-400 font-semibold">
@@ -184,7 +184,7 @@ function WhaleCard({ whales }: WhaleCardProps) {
         <Users className="w-5 h-5" />
         Whale Analysis
       </h3>
-      <div className="grid grid-cols-2 gap-3 text-sm mb-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm mb-3">
         <div>
           <p className="text-gray-400">Whale Count</p>
           <p className="text-white font-bold">{whales.whaleCount}</p>
@@ -222,7 +222,7 @@ interface LiquidityCardProps {
 function LiquidityCard({ liquidity }: LiquidityCardProps) {
   return (
     <div className="p-4 bg-slate-800/50 rounded-xl border border-slate-700">
-      <h3 className="text-white font-bold mb-2 flex items-center gap-2">
+      <h3 className="text-white font-bold mb-2 flex items-center gap-2 text-sm sm:text-base">
         <TrendingUp className="w-5 h-5" />
         Liquidity Health: {liquidity.healthScore}/100
       </h3>
@@ -238,7 +238,7 @@ function LiquidityCard({ liquidity }: LiquidityCardProps) {
         </div>
       </div>
       {liquidity.recommendations.length > 0 && (
-        <div className="text-xs text-gray-300">
+        <div className="text-xs sm:text-sm text-gray-300">
           {liquidity.recommendations[0]}
         </div>
       )}
@@ -255,13 +255,13 @@ interface SmartMoneyCardProps {
 function SmartMoneyCard({ smartMoney }: SmartMoneyCardProps) {
   return (
     <div className="p-4 bg-slate-800/50 rounded-xl border border-slate-700">
-      <h3 className="text-white font-bold mb-2 flex items-center gap-2">
+      <h3 className="text-white font-bold mb-2 flex items-center gap-2 text-sm sm:text-base">
         <Shield className="w-5 h-5" />
         Smart Money Insights
       </h3>
       <div className="space-y-1">
         {smartMoney.insights.map((insight: string, i: number) => (
-          <div key={i} className="text-xs text-gray-300">{insight}</div>
+          <div key={i} className="text-xs sm:text-sm text-gray-300">{insight}</div>
         ))}
       </div>
     </div>

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Search } from 'lucide-react';
 import { CHAINS } from '@/types';
+import Image from 'next/image';
 
 import { ScanResult } from '@/types';
 
@@ -50,19 +51,28 @@ export default function ModernScanner({ onScan }: { onScan: (result: ScanResult)
         />
       </div>
 
-      {/* Chain Selector Pills */}
-      <div className="flex gap-2 overflow-x-auto pb-2">
+      {/* Chain Selector Pills - Improved mobile scrolling */}
+      <div className="flex gap-2 overflow-x-auto pb-2 -mx-2 px-2 scrollbar-hide">
         {Object.entries(CHAINS).map(([id, chain]) => (
           <button
             key={id}
             onClick={() => setChainId(id)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all min-w-fit ${
               chainId === id
                 ? 'bg-blue-600 text-white'
                 : 'bg-slate-700/50 text-gray-300 hover:bg-slate-600/50'
             }`}
           >
-            {chain.icon} {chain.name}
+            <span className="flex items-center gap-2">
+              <Image
+                src={chain.icon}
+                alt={`${chain.name} Logo`}
+                width={16} // Sesuaikan ukuran sesuai kebutuhan
+                height={16} // Sesuaikan ukuran sesuai kebutuhan
+                className="w-4 h-4" // Atur ukuran tampilan
+              />
+              {chain.name}
+            </span>
           </button>
         ))}
       </div>
