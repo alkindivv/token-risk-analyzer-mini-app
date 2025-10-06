@@ -4,7 +4,9 @@ import { useState } from 'react';
 import { Search } from 'lucide-react';
 import { CHAINS } from '@/types';
 
-export default function ModernScanner({ onScan }: { onScan: (result: any) => void }) {
+import { ScanResult } from '@/types';
+
+export default function ModernScanner({ onScan }: { onScan: (result: ScanResult) => void }) {
   const [query, setQuery] = useState('');
   const [chainId, setChainId] = useState('8453');
   const [loading, setLoading] = useState(false);

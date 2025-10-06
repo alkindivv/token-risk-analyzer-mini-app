@@ -2,6 +2,7 @@
 
 import { ScanResult, CHAINS } from '@/types';
 import { TrendingUp, Shield, Users, Activity, AlertTriangle, Home, GitCompare, Settings, ExternalLink } from 'lucide-react';
+import AdvancedMetrics from '@/components/AdvancedMetrics';
 
 const RISK_CONFIG = {
   LOW_RISK: { color: 'bg-green-500', label: 'LOW RISK', gradient: 'from-green-500/20' },
@@ -11,12 +12,17 @@ const RISK_CONFIG = {
 };
 
 export default function ModernRiskCard({ result }: { result: ScanResult }) {
-  const { securityData, riskScore, chainId } = result;
+  const { securityData, riskScore, chainId, advanced, verdict } = result;
   const config = RISK_CONFIG[riskScore.category];
   const chain = CHAINS[chainId as keyof typeof CHAINS];
 
+  type StatusResult = {
+    label: string;
+    status: 'success' | 'warning' | 'danger' | 'neutral';
+  };
+
   // Calculate liquidity status from REAL data
-  const liquidityStatus = () => {
+  const liquidityStatus = (): StatusResult => {
     const lpCount = securityData.lpHolderCount || 0;
     if (lpCount >= 100) return { label: 'Excellent', status: 'success' };
     if (lpCount >= 50) return { label: 'Sufficient', status: 'success' };
@@ -25,7 +31,7 @@ export default function ModernRiskCard({ result }: { result: ScanResult }) {
   };
 
   // Calculate holder distribution from REAL data
-  const holderDistribution = () => {
+  const holderDistribution = (): StatusResult => {
     if (securityData.holders && securityData.holders.length > 0) {
       const top10 = securityData.holders.slice(0, 10).reduce((sum, h) => sum + parseFloat(h.percent || '0'), 0);
       if (top10 < 40) return { label: 'Well distributed', status: 'success' };
@@ -36,7 +42,7 @@ export default function ModernRiskCard({ result }: { result: ScanResult }) {
   };
 
   // Calculate contract risk from REAL security data
-  const contractRisk = () => {
+  const contractRisk = (): StatusResult => {
     const score = riskScore.factors.contractSecurity;
     if (score < 20) return { label: 'Secure', status: 'success' };
     if (score < 50) return { label: 'Moderate', status: 'warning' };
@@ -45,7 +51,7 @@ export default function ModernRiskCard({ result }: { result: ScanResult }) {
   };
 
   // Audit flags from REAL data
-  const auditFlags = () => {
+  const auditFlags = (): StatusResult => {
     const issues = [];
     if (securityData.isOpenSource === '0') issues.push('Not verified');
     if (securityData.isProxy === '1') issues.push('Proxy');
@@ -57,7 +63,7 @@ export default function ModernRiskCard({ result }: { result: ScanResult }) {
   };
 
   // Trading restrictions from REAL data
-  const tradingRestrictions = () => {
+  const tradingRestrictions = (): StatusResult => {
     const score = riskScore.factors.tradingRestrictions;
     if (score === 0) return { label: 'No restrictions', status: 'success' };
     if (score < 30) return { label: 'Minor', status: 'warning' };
@@ -65,7 +71,7 @@ export default function ModernRiskCard({ result }: { result: ScanResult }) {
   };
 
   // Tax analysis from REAL data
-  const taxAnalysis = () => {
+  const taxAnalysis = (): StatusResult => {
     const buyTax = parseFloat(securityData.buyTax || '0');
     const sellTax = parseFloat(securityData.sellTax || '0');
     const totalTax = buyTax + sellTax;
@@ -186,6 +192,14 @@ export default function ModernRiskCard({ result }: { result: ScanResult }) {
         />
       </div>
 
+      {/* Advanced Metrics Section - Displays Price, Whale Detector, Rug Pull, Smart Money */}
+      {advanced && (
+        <div className="mb-6 p-4 bg-slate-800/30 backdrop-blur-sm rounded-xl border border-slate-700">
+          <h3 className="text-white font-bold mb-4 text-center">Advanced Analytics</h3>
+          <AdvancedMetrics advanced={advanced} verdict={verdict} />
+        </div>
+      )}
+
       {/* Detailed Warnings */}
       {riskScore.warnings.length > 0 && (
         <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-xl">
@@ -231,11 +245,13 @@ export default function ModernRiskCard({ result }: { result: ScanResult }) {
           <NavButton 
             icon={<GitCompare className="w-6 h-6" />} 
             label="Compare" 
+            active={false}
             onClick={() => alert('Compare feature coming soon!')}
           />
           <NavButton 
             icon={<Settings className="w-6 h-6" />} 
             label="Settings"
+            active={false}
             onClick={() => alert('Settings feature coming soon!')}
           />
         </div>
@@ -244,7 +260,15 @@ export default function ModernRiskCard({ result }: { result: ScanResult }) {
   );
 }
 
-function MetricCard({ icon, title, value, detail, status }: any) {
+interface MetricCardProps {
+  icon: React.ReactNode;
+  title: string;
+  value: string;
+  detail: string;
+  status: 'success' | 'warning' | 'danger' | 'neutral';
+}
+
+function MetricCard({ icon, title, value, detail, status }: MetricCardProps) {
   const statusColors = {
     success: 'text-green-400 border-green-500/30 bg-green-500/10',
     warning: 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10',
@@ -262,7 +286,13 @@ function MetricCard({ icon, title, value, detail, status }: any) {
   );
 }
 
-function StatCard({ label, value, alert }: any) {
+interface StatCardProps {
+  label: string;
+  value: string;
+  alert: boolean;
+}
+
+function StatCard({ label, value, alert }: StatCardProps) {
   return (
     <div className={`p-3 rounded-lg text-center ${
       alert ? 'bg-red-500/20 border border-red-500/50' : 'bg-slate-800/50 border border-slate-700'
@@ -273,7 +303,14 @@ function StatCard({ label, value, alert }: any) {
   );
 }
 
-function NavButton({ icon, label, active, onClick }: any) {
+interface NavButtonProps {
+  icon: React.ReactNode;
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}
+
+function NavButton({ icon, label, active, onClick }: NavButtonProps) {
   return (
     <button
       onClick={onClick}
@@ -286,3 +323,7 @@ function NavButton({ icon, label, active, onClick }: any) {
     </button>
   );
 }
+
+
+
+

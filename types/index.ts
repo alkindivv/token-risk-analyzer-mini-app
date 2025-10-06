@@ -36,6 +36,7 @@ export interface TokenSecurityData {
       address: string;
       balance: string;
       percent: string;
+      isContract?: boolean;
     }>;
     creatorPercent?: string;
   }
@@ -53,12 +54,68 @@ export interface TokenSecurityData {
     criticalIssues: string[];
   }
   
+  export interface AdvancedData {
+    price?: {
+      usd: number;
+      usd_24h_change: number;
+      usd_market_cap: number;
+      usd_24h_vol: number;
+    };
+    dex?: {
+      priceUsd: string;
+      liquidity: {
+        usd: number;
+      };
+      fdv: number;
+      marketCap: number;
+      volume24h: number;
+      priceChange24h: number;
+      txns24h: {
+        buys: number;
+        sells: number;
+      };
+    };
+    whales: {
+      whaleCount: number;
+      concentration: 'HEALTHY' | 'MODERATE' | 'DANGEROUS';
+      warnings: string[];
+    };
+    rugPull: {
+      probability: number;
+      risk: 'MINIMAL' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+      recommendation: string;
+      indicators: Array<{
+        description: string;
+      }>;
+    };
+    smartMoney: {
+      insights: string[];
+    };
+    liquidity: {
+      healthScore: number;
+      status: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR' | 'CRITICAL';
+      recommendations: string[];
+    };
+    social: {
+      sentiment: 'POSITIVE' | 'NEUTRAL' | 'NEGATIVE';
+      trends: string[];
+    };
+  }
+
+  export interface Verdict {
+    rating: 'SAFE' | 'MODERATE' | 'RISKY' | 'DANGEROUS';
+    confidence: number;
+    recommendation: string;
+  }
+
   export interface ScanResult {
     tokenAddress: string;
     chainId: string;
     securityData: TokenSecurityData;
     riskScore: RiskScore;
     scannedAt: string;
+    advanced?: AdvancedData;
+    verdict?: Verdict;
   }
   
   export const CHAINS = {
