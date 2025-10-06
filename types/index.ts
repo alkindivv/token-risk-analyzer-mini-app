@@ -121,8 +121,8 @@ export interface TokenSecurityData {
   export const CHAINS = {
     '1': { name: 'Ethereum', icon: '/chains/ethereum.svg', explorer: 'https://etherscan.io' },
     '8453': { name: 'Base', icon: '/chains/base.svg', explorer: 'https://basescan.org' },
-    '56': { name: 'BSC', icon: '/chains/ethereum.svg', explorer: 'https://bscscan.com' },
-    '137': { name: 'Polygon', icon: '/chains/ethereum.svg', explorer: 'https://polygonscan.com' },
-    '42161': { name: 'Arbitrum', icon: '/chains/ethereum.svg', explorer: 'https://arbiscan.io' },
+    // '56': { name: 'BSC', icon: '/chains/ethereum.svg', explorer: 'https://bscscan.com' },
+    // '137': { name: 'Polygon', icon: '/chains/ethereum.svg', explorer: 'https://polygonscan.com' },
+    // '42161': { name: 'Arbitrum', icon: '/chains/ethereum.svg', explorer: 'https://arbiscan.io' },
   } as const;
   

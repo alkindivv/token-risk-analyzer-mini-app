@@ -5,6 +5,9 @@ import { TrendingUp, Shield, Users, Activity, AlertTriangle, Home, GitCompare, S
 
 import Image from 'next/image';
 
+type Status = 'success' | 'warning' | 'danger' | 'neutral';
+type Metric = { label: string; status: Status };
+
 const RISK_CONFIG = {
   LOW_RISK: { color: 'bg-green-500', label: 'LOW RISK', gradient: 'from-green-500/20' },
   MEDIUM_RISK: { color: 'bg-yellow-500', label: 'MEDIUM RISK', gradient: 'from-yellow-500/20' },
@@ -18,7 +21,7 @@ export default function ModernRiskCard({ result }: { result: ScanResult }) {
   const chain = CHAINS[chainId as keyof typeof CHAINS];
 
   // Calculate liquidity status from REAL data
-  const liquidityStatus = () => {
+  const liquidityStatus = (): Metric => {
     const lpCount = securityData.lpHolderCount || 0;
     if (lpCount >= 100) return { label: 'Excellent', status: 'success' };
     if (lpCount >= 50) return { label: 'Sufficient', status: 'success' };
@@ -27,7 +30,7 @@ export default function ModernRiskCard({ result }: { result: ScanResult }) {
   };
 
   // Calculate holder distribution from REAL data
-  const holderDistribution = () => {
+  const holderDistribution = (): Metric => {
     if (securityData.holders && securityData.holders.length > 0) {
       const top10 = securityData.holders.slice(0, 10).reduce((sum, h) => sum + parseFloat(h.percent || '0'), 0);
       if (top10 < 40) return { label: 'Well distributed', status: 'success' };
@@ -38,7 +41,7 @@ export default function ModernRiskCard({ result }: { result: ScanResult }) {
   };
 
   // Calculate contract risk from REAL security data
-  const contractRisk = () => {
+  const contractRisk = (): Metric => {
     const score = riskScore.factors.contractSecurity;
     if (score < 20) return { label: 'Secure', status: 'success' };
     if (score < 50) return { label: 'Moderate', status: 'warning' };
@@ -47,7 +50,7 @@ export default function ModernRiskCard({ result }: { result: ScanResult }) {
   };
 
   // Audit flags from REAL data
-  const auditFlags = () => {
+  const auditFlags = (): Metric => {
     const issues = [];
     if (securityData.isOpenSource === '0') issues.push('Not verified');
     if (securityData.isProxy === '1') issues.push('Proxy');
@@ -59,7 +62,7 @@ export default function ModernRiskCard({ result }: { result: ScanResult }) {
   };
 
   // Trading restrictions from REAL data
-  const tradingRestrictions = () => {
+  const tradingRestrictions = (): Metric => {
     const score = riskScore.factors.tradingRestrictions;
     if (score === 0) return { label: 'No restrictions', status: 'success' };
     if (score < 30) return { label: 'Minor', status: 'warning' };
@@ -67,7 +70,7 @@ export default function ModernRiskCard({ result }: { result: ScanResult }) {
   };
 
   // Tax analysis from REAL data
-  const taxAnalysis = () => {
+  const taxAnalysis = (): Metric => {
     const buyTax = parseFloat(securityData.buyTax || '0');
     const sellTax = parseFloat(securityData.sellTax || '0');
     const totalTax = buyTax + sellTax;
@@ -435,25 +438,26 @@ export default function ModernRiskCard({ result }: { result: ScanResult }) {
           <NavButton 
             icon={<Home className="w-6 h-6" />} 
             label="Analyze" 
-            active 
+            active={true}
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           />
           <NavButton 
-            icon={<GitCompare className="w-6 h-6" />} 
-            label="Compare" 
-            onClick={() => alert('Compare feature coming soon!')}
-          />
-          <NavButton 
-            icon={<Settings className="w-6 h-6" />} 
-            label="Settings"
-            onClick={() => alert('Settings feature coming soon!')}
-          />
-        </div>
-      </div>
+        icon={<GitCompare className="w-6 h-6" />} 
+        label="Compare" 
+        active={false}
+        onClick={() => alert('Compare feature coming soon!')}
+      />
+      <NavButton 
+        icon={<Settings className="w-6 h-6" />} 
+        label="Settings"
+        active={false}
+        onClick={() => alert('Settings feature coming soon!')}
+      />
     </div>
-  );
+  </div>
+</div>
+);
 }
-
 interface MetricCardProps {
   icon: React.ReactNode;
   title: string;
@@ -465,8 +469,8 @@ interface MetricCardProps {
 function MetricCard({ icon, title, value, detail, status }: MetricCardProps) {
   const statusColors = {
     success: 'text-green-400 border-green-500/30 bg-green-500/10',
-    warning: 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10',
     danger: 'text-red-400 border-red-500/30 bg-red-500/10',
+    warning: 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10',
     neutral: 'text-gray-400 border-slate-700 bg-slate-800/50',
   };
 
